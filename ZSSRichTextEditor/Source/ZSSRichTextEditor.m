@@ -397,6 +397,27 @@ static Class hackishFixClass = Nil;
         [items addObject:h6];
     }
     
+    // Small Font Size
+    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarSmallFontSize]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
+        ZSSBarButtonItem *textColor = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSh1.png"] style:UIBarButtonItemStylePlain target:self action:@selector(setSmallFontSize)];
+        textColor.label = @"smallFontSize";
+        [items addObject:textColor];
+    }
+    
+    // Medium Font Size
+    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarMediumFontSize]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
+        ZSSBarButtonItem *textColor = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSh2.png"] style:UIBarButtonItemStylePlain target:self action:@selector(setMediumFontSize)];
+        textColor.label = @"mediumFontSize";
+        [items addObject:textColor];
+    }
+    
+    // Large Font Size
+    if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarLargeFontSize]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
+        ZSSBarButtonItem *textColor = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSSh3.png"] style:UIBarButtonItemStylePlain target:self action:@selector(setLargeFontSize)];
+        textColor.label = @"largeFontSize";
+        [items addObject:textColor];
+    }
+    
     // Text Color
     if ((_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarTextColor]) || (_enabledToolbarItems && [_enabledToolbarItems containsObject:ZSSRichTextEditorToolbarAll])) {
         ZSSBarButtonItem *textColor = [[ZSSBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ZSStextcolor.png"] style:UIBarButtonItemStylePlain target:self action:@selector(textColor)];
@@ -725,6 +746,21 @@ static Class hackishFixClass = Nil;
 
 - (void)paragraph {
     NSString *trigger = @"zss_editor.setParagraph();";
+    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
+}
+
+- (void)setSmallFontSize {
+    NSString *trigger = @"zss_editor.setSmallFont();";
+    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
+}
+
+- (void)setMediumFontSize {
+    NSString *trigger = @"zss_editor.setMediumFont();";
+    [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
+}
+
+- (void)setLargeFontSize {
+    NSString *trigger = @"zss_editor.setLargeFont();";
     [self.editorView stringByEvaluatingJavaScriptFromString:trigger];
 }
 

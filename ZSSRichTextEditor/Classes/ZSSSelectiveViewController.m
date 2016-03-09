@@ -22,10 +22,10 @@
     self.title = @"Selective";
     
     // HTML Content to set in the editor
-    NSString *html = @"<p>Example showing just a few toolbar buttons.</p>";
+    NSString *html = @"";
     
     // Choose which toolbar items to show
-    self.enabledToolbarItems = @[ZSSRichTextEditorToolbarBold, ZSSRichTextEditorToolbarH1, ZSSRichTextEditorToolbarParagraph];
+    self.enabledToolbarItems = @[ZSSRichTextEditorToolbarBold, ZSSRichTextEditorToolbarItalic, ZSSRichTextEditorToolbarSmallFontSize, ZSSRichTextEditorToolbarMediumFontSize, ZSSRichTextEditorToolbarLargeFontSize, ZSSRichTextEditorToolbarViewSource];
     
     // Set the HTML contents of the editor
     [self setHTML:html];

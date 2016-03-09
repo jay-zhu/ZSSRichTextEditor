@@ -39,6 +39,7 @@ zss_editor.updateScrollOffset = false;
 zss_editor.init = function() {
     
     $('#zss_editor_content').on('touchend', function(e) {
+                                zss_editor.debug('touch');
                                 zss_editor.enabledEditingItems(e);
                                 var clicked = $(e.target);
                                 if (!clicked.hasClass('zs_active')) {
@@ -47,19 +48,25 @@ zss_editor.init = function() {
                                 });
     
     $(document).on('selectionchange',function(e){
+                   zss_editor.debug('select change');
                    zss_editor.calculateEditorHeightWithCaretPosition();
                    zss_editor.setScrollPosition();
+                   zss_editor.enabledEditingItems(e);
                    });
     
     $(window).on('scroll', function(e) {
+                 zss_editor.debug('scroll');
                  zss_editor.updateOffset();
+                 zss_editor.enabledEditingItems(e);
                  });
     
     // Make sure that when we tap anywhere in the document we focus on the editor
     $(window).on('touchmove', function(e) {
+                 zss_editor.debug('touch move');
                  zss_editor.isDragging = true;
                  zss_editor.updateScrollOffset = true;
                  zss_editor.setScrollPosition();
+                 zss_editor.enabledEditingItems(e);
                  });
     $(window).on('touchstart', function(e) {
                  zss_editor.isDragging = false;
@@ -337,6 +344,36 @@ zss_editor.setTextColor = function(color) {
     // document.execCommand("removeFormat", false, "foreColor"); // Removes just foreColor
 }
 
+zss_editor.setFontSize = function(size) {
+//        document.execCommand('insertHTML', false, '<span style="font-size:' + size + '">'+ document.getSelection()+'</span>');
+    document.execCommand("styleWithCSS", null, true);
+    document.execCommand('fontSize', false, size);
+    document.execCommand("styleWithCSS", null, false);
+    zss_editor.enabledEditingItems();
+    // document.execCommand("removeFormat", false, "foreColor"); // Removes just foreColor
+}
+
+zss_editor.setSmallFont = function() {
+    document.execCommand("styleWithCSS", null, true);
+    document.execCommand('fontSize', false, 2);
+    document.execCommand("styleWithCSS", null, false);
+    zss_editor.enabledEditingItems('smallFontSize');
+}
+
+zss_editor.setMediumFont = function() {
+    document.execCommand("styleWithCSS", null, true);
+    document.execCommand('fontSize', false, 3);
+    document.execCommand("styleWithCSS", null, false);
+    zss_editor.enabledEditingItems('mediumFontSize');
+}
+
+zss_editor.setLargeFont = function() {
+    document.execCommand("styleWithCSS", null, true);
+    document.execCommand('fontSize', false, 5);
+    document.execCommand("styleWithCSS", null, false);
+    zss_editor.enabledEditingItems('largeFontSize');
+}
+
 zss_editor.setBackgroundColor = function(color) {
     zss_editor.restorerange();
     document.execCommand("styleWithCSS", null, true);
@@ -553,17 +590,23 @@ zss_editor.enabledEditingItems = function(e) {
     if (formatBlock.length > 0) {
         items.push(formatBlock);
     }
+    
+    
     // Images
     $('img').bind('touchstart', function(e) {
                   $('img').removeClass('zs_active');
                   $(this).addClass('zs_active');
                   });
     
+    if (typeof(e) == 'string') {
+        items.push(e);
+    }
     // Use jQuery to figure out those that are not supported
-    if (typeof(e) != "undefined") {
+    else if (typeof(e) != "undefined") {
         
         // The target element
-        var t = $(e.target);
+        var s = zss_editor.getSelectedNode();
+        var t = $(s);
         var nodeName = e.target.nodeName.toLowerCase();
         
         // Background Color
@@ -576,6 +619,22 @@ zss_editor.enabledEditingItems = function(e) {
         if (textColor.length != 0 && textColor != 'rgba(0, 0, 0, 0)' && textColor != 'rgb(0, 0, 0)' && textColor != 'transparent') {
             items.push('textColor');
         }
+        // Text Font Size
+        var fontSize = t.css('font-size');
+        if (nodeName == 'font') {
+            var fontSize = t.size()
+        }
+        zss_editor.debug(fontSize);
+        if (fontSize.length != 0) {
+            if (fontSize == 'medium' || fontSize == '16px') {
+                items.push('mediumFontSize');
+            } else if (fontSize == 'small' || fontSize == '13px') {
+                items.push('smallFontSize');
+            } else if (fontSize == 'large' || fontSize == 'x-large' || fontSize == '24px') {
+                items.push('largeFontSize');
+            }
+        }
+
         // Link
         if (nodeName == 'a') {
             zss_editor.currentEditingLink = t;
@@ -620,6 +679,7 @@ zss_editor.enabledEditingItems = function(e) {
             console.log("callback://");
         }
     }
+    return items;
     
 }
 
