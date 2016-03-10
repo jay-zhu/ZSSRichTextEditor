@@ -57,7 +57,6 @@ zss_editor.init = function() {
     $(window).on('scroll', function(e) {
                  zss_editor.debug('scroll');
                  zss_editor.updateOffset();
-                 zss_editor.enabledEditingItems(e);
                  });
     
     // Make sure that when we tap anywhere in the document we focus on the editor
@@ -358,6 +357,9 @@ zss_editor.setSmallFont = function() {
     document.execCommand('fontSize', false, 2);
     document.execCommand("styleWithCSS", null, false);
     zss_editor.enabledEditingItems('smallFontSize');
+    
+    
+    
 }
 
 zss_editor.setMediumFont = function() {
@@ -365,6 +367,7 @@ zss_editor.setMediumFont = function() {
     document.execCommand('fontSize', false, 3);
     document.execCommand("styleWithCSS", null, false);
     zss_editor.enabledEditingItems('mediumFontSize');
+    
 }
 
 zss_editor.setLargeFont = function() {
@@ -372,6 +375,8 @@ zss_editor.setLargeFont = function() {
     document.execCommand('fontSize', false, 5);
     document.execCommand("styleWithCSS", null, false);
     zss_editor.enabledEditingItems('largeFontSize');
+    
+    
 }
 
 zss_editor.setBackgroundColor = function(color) {
@@ -528,6 +533,25 @@ zss_editor.getHTML = function() {
                 }
                 });
     }
+    
+    // Update font size style
+    $('span[style*="small"]').addClass('small');
+    $('span[style*="medium"]').addClass('medium');
+    $('span[style*="x-large"]').addClass('large');
+    
+    $('font[size="2"]').replaceWith(function(){
+                                    return $("<span />").append($(this).contents()).css('font-size','small').addClass('small');
+                                    });
+    
+    $('font[size="3"]').replaceWith(function(){
+                                    return $("<span />").append($(this).contents()).css('font-size','medium').addClass('medium');
+                                    });
+    
+    $('font[size="5"]').replaceWith(function(){
+                                    return $("<span />").append($(this).contents()).css('font-size','x-large').addClass('large');
+                                    });
+    
+    
     
     // Get the contents
     var h = document.getElementById("zss_editor_content").innerHTML;
